@@ -1,0 +1,38 @@
+'=========================================================
+'Formatting required for successful use of script 
+
+'at the top level of your inp file you need the following 
+
+macro   Filename    { "$.raw" }     'data file used for the refinement
+
+macro   Resultsname { "$.txt" }     'the name of the text file containg the QPA results. will be saved in the folder the inp file is saved
+
+
+'=========================================================
+'Output code / bottom of inp file 
+
+'every str must have phase_name 
+
+for strs    {
+                weight_percent 0    
+                r_bragg 0
+                Out_QPA
+            }
+
+macro   Out_QPA {
+                    out Resultsname append
+                    Out(Get(phase_name), "%30s\t")
+                    Out(Get(weight_percent), "%11.6f\t", "%11.6f\t")        'output wt% and esd to text file. or your own prm for external standard/internal standard wt% or what you want to export
+                    Out(Get(r_bragg), "%11.6f\n")
+                }
+
+        Out_String("\nFormat:\n")       'IMPORTANT. script looks for this and exports everything above it as the only text above this is the list of phases and wt%
+		Out_String("\tPhase name\t")    Out_String("relative wt%\t") Out_String("esd\t") Out_String("r_bragg\n")   'change out strings as required
+		Out_String("XRD file:\t")       Out_String(Filename)					'in the output file, include the file name 
+		Out_String("\n") 	 
+		Out_String("Rwp:\t") 			Out(Get(r_wp), "%11.6f\n") 
+		Out_String("GOF:\t") 			Out(Get(gof), "%11.6f\n") 
+		Out_String("Displacement:\t")	Out(spdi, "%11.6f\n")       'or what your displacement paramater is called. IMPORTANT. if occurs once, copy everything above format.
+		Out_String("\n") 
+		Out_String("\n")	
+
